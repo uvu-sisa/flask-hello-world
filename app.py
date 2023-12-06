@@ -9,8 +9,15 @@ csv_file_path = 'numbers.csv'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Get the number from the form
-        number = request.form['number']
+        if 'clear' in request.form:
+            # Clear the CSV file
+            open(csv_file_path, 'w').close()
+        else:
+            # Get the number from the form and append it to the CSV file
+            number = request.form['number']
+            with open(csv_file_path, 'a', newline='') as csvfile:
+                csv_writer = csv.writer(csvfile)
+                csv_writer.writerow([number])
 
         # Append the number to the CSV file
         with open(csv_file_path, 'a', newline='') as csvfile:
