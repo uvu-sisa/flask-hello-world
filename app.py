@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 import csv
 import plotly.express as px
+import plotly.io as pio
+import io
 
 app = Flask(__name__)
 
