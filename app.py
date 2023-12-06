@@ -18,17 +18,19 @@ def index():
             with open(csv_file_path, 'a', newline='') as csvfile:
                 csv_writer = csv.writer(csvfile)
                 csv_writer.writerow([number])
-
-        # Append the number to the CSV file
-        with open(csv_file_path, 'a', newline='') as csvfile:
-            csv_writer = csv.writer(csvfile)
-            csv_writer.writerow([number])
-
     # Read the existing numbers from the CSV file
     existing_numbers = []
     with open(csv_file_path, 'r') as csvfile:
         csv_reader = csv.reader(csvfile)
         for row in csv_reader:
             existing_numbers.append(row[0])
+    
+    # Sample data
+    df = px.data.iris()
 
-    return render_template('index.html', existing_numbers=existing_numbers)
+    # Create a Plotly Express plot
+    fig = px.scatter(df, x='sepal_width', y='sepal_length', color='species', size='petal_length')
+
+    # Convert the plot to HTML
+    plot_html = pio.to_html(fig, full_html=False)
+    return render_template('index.html', existing_numbers=existing_numbers,plot_html=plot_html)
