@@ -25,6 +25,3 @@ def index():
             existing_numbers.append(row[0])
 
     return render_template('index.html', existing_numbers=existing_numbers)
-
-if __name__ == '__main__':
-    app.run(debug=True)
