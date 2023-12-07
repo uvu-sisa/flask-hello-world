@@ -160,8 +160,11 @@ def index():
         
         if 'clear' in request.form:
             # Clear the CSV file
-            os.remove('*.csv')
-            open(csv_file_path, 'w').close()
+            try:
+                os.remove('*.csv')
+                open(csv_file_path, 'w').close()
+            except:
+                pass
             
         else:
             # Get the number from the form and append it to the CSV file
