@@ -185,7 +185,7 @@ def index():
     existing_numbers = []
     with open(csv_file_path, 'r') as csvfile:
         csv_reader = csv.reader(csvfile)
-        for row in csv_reader:
+        for row in csv_reader[::-1]:
             existing_numbers.append(row[0])
     
     # Sample data
