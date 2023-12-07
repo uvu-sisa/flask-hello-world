@@ -172,13 +172,16 @@ def index():
             if number==37:number='0'
             if number==38:number='00'
             new_df = create_data(number)
+            compare = pd.concat([pred,new_df],ignore_index=True).T
+            compare.columns=['LastPrediction',f'Actual{number}']
+            compare = compare.loc[compare.LastPrediction==1].to_html()
             actual_df = write_data(new_df,'actual')
             last_pred = get_last_predictor()
             period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
             pred = gen_predictor(actual_df)
             write_data(pred,'predictor')
             predT= pred.T
-            prediction_list = predT.loc[predT[0]==1].index.values
+            prediction_list = ','.join(list(predT.loc[predT[0]==1].index.values))
             write_pnl(period_pnl)    
             
     # Read the existing numbers from the CSV file
@@ -210,5 +213,5 @@ def index():
     else:
         prob_plot = None
 
-    return render_template('index.html',prob_plot=prob_plot,prediction_list=prediction_list, 
+    return render_template('index.html',compare=compare,prob_plot=prob_plot,prediction_list=prediction_list, 
                            existing_numbers=existing_numbers[::-1],plot_html=plot_html)
