@@ -111,7 +111,7 @@ def write_data(new_df,module_name):
     return df
     
 def cal_period_pnl(preds,actual):
-    return np.dot(np.multiply(preds,actual),RETURNS)
+    return np.dot(np.multiply(preds,actual),RETURNS)-np.sum(preds)
 
 def write_pnl(period_pnl):
     if os.path.exists('pnl.csv'):
