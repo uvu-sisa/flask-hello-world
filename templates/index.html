@@ -48,11 +48,12 @@
     {{ plot_html|safe }}
     {{ prob_plot|safe}}
     <h2>LastPrediction</h2>
-            
+        {% if tables is not None %}    
         {% for table in tables %}
         {{titles[loop.index]}}
         {{ table|safe }}
         {% endfor %}
+        {% endif %}
     <h2>Existing Numbers:</h2>
     <ul>
         {% for num in existing_numbers %}
