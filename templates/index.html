@@ -15,6 +15,16 @@
         <button type="submit" name="clear">Clear CSV</button>
     </form>
 
+    
+    <h2>Prediction</h2>
+    <ul>
+        {% for num in prediction_list %}
+            <li>{{ num }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Plot</h2>
+    {{ plot_html|safe }}
+
     <h2>Existing Numbers:</h2>
     <ul>
         {% for num in existing_numbers %}
@@ -22,7 +32,5 @@
         {% endfor %}
     </ul>
 
-    <h2>Plot</h2>
-    {{ plot_html|safe }}
 </body>
 </html>
