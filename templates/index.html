@@ -48,7 +48,7 @@
     {{ plot_html|safe }}
     {{ prob_plot|safe}}
     <h2>LastPrediction</h2>
-        {% if tables is not None %}    
+        {% if tables is not none %}    
         {% for table in tables %}
         {{titles[loop.index]}}
         {{ table|safe }}
