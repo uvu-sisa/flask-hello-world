@@ -191,7 +191,7 @@ def index():
         pnls = pd.read_csv('pnl.csv')
     else:
         pnls = pd.DataFrame()
-    if not pnls.empty
+    if not pnls.empty:
         # Create a Plotly Express plot
         fig = px.line(pnls, x="number", y="pnl", title='Cum PNL')
 
@@ -199,4 +199,13 @@ def index():
         plot_html = pio.to_html(fig, full_html=False)
     else:
         plot_html = None
-    return render_template('index.html',prediction_list=prediction_list, existing_numbers=existing_numbers,plot_html=plot_html)
+    if os.path.exists('prob.csv'):
+        df = pd.read_csv('prob.csv')
+
+        fig = px.bar(df,x='index' ,y=['TotalProb', 'Last36daysProb'])
+        fig.show()
+        prob_plot = pio.to_html(fig, full_html=False)
+    else:
+        prob_plot = None
+
+    return render_template('index.html',prob_plot=prob_plot,prediction_list=prediction_list, existing_numbers=existing_numbers,plot_html=plot_html)
