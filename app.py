@@ -129,7 +129,7 @@ def get_last_predictor():
     return preds
         
 
-def gen_predictor(actual_df,rolling_periods=36,num_bets=3):
+def gen_predictor(actual_df,rolling_periods=36,num_bets=4):
     alpha = np.zeros(NUM_INS)
     prob = actual_df.sum()/len(actual_df)
     lst_prob = actual_df.iloc[-rolling_periods:].sum()/rolling_periods
@@ -140,7 +140,7 @@ def gen_predictor(actual_df,rolling_periods=36,num_bets=3):
     sum_prob.reset_index().to_csv('prob.csv',index=False)
     pred = (prob-lst_prob)*RETURNS
     order_prob = np.argsort(pred.values)
-    for i in range(num_bets+1):
+    for i in range(num_bets):
         idx = order_prob[-1-i]
         alpha[idx] = 1
     return pd.DataFrame(alpha,index=TICKER).T
@@ -169,6 +169,8 @@ def index():
         else:
             # Get the number from the form and append it to the CSV file
             number = request.form['number']
+            numbet = request.form['numbet']
+            print(f'numbet {numbet}')
             with open(csv_file_path, 'a', newline='') as csvfile:
                 csv_writer = csv.writer(csvfile)
                 csv_writer.writerow([number])
@@ -178,11 +180,11 @@ def index():
             new_df = create_data(number)
             compare = pd.concat([pred,new_df],ignore_index=True).T
             compare.columns=['LastPrediction',f'Actual{number}']
-            compare = compare.loc[compare.LastPrediction==1].to_html()
+            compare = compare.loc[compare.LastPrediction==1].to_html(classes='data')
             actual_df = write_data(new_df,'actual')
             last_pred = get_last_predictor()
             period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
-            pred = gen_predictor(actual_df)
+            pred = gen_predictor(actual_df,num_bets=numbet)
             write_data(pred,'predictor')
             predT= pred.T
             prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
@@ -217,5 +219,5 @@ def index():
     else:
         prob_plot = None
 
-    return render_template('index.html',tables=[compare.to_html(classes='data')],prob_plot=prob_plot,prediction_list=prediction_list, 
+    return render_template('index.html',tables=[compare],prob_plot=prob_plot,prediction_list=prediction_list, 
                            existing_numbers=existing_numbers[::-1],plot_html=plot_html)
