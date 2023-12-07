@@ -9,16 +9,18 @@
     <h1>Number Input</h1>
 
     <form method="post">
-        <label for="number">Enter a number:</label>
+        <label for="numberLabel">Enter a number:</label>
         <input type="number" id="number" name="number" required>
         <button type="submit">Submit</button>
         <button type="submit" name="clear">Clear CSV</button>
-        <button id="btn1">1</button>
+
+    </form>
+    <button id="btn1">1</button>
 
     <script>
         $(document).ready(function () {
             // Initial value
-            let inputValue = 42;
+            let number = 1;
 
             // Update the span with the initial value
             $('#number').text(number);
@@ -33,9 +35,6 @@
             });
         });
     </script>
-
-    </form>
-
     
     <h2>Prediction</h2>
     <ul>
