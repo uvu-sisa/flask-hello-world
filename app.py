@@ -180,7 +180,7 @@ def index():
             new_df = create_data(number)
             compare = pd.concat([pred,new_df],ignore_index=True).T
             compare.columns=['LastPrediction',f'Actual{number}']
-            compare = compare.loc[compare.LastPrediction==1].to_html(classes='data')
+            compare = compare.loc[compare.LastPrediction==1].to_html(classes='data', header="true")
             actual_df = write_data(new_df,'actual')
             last_pred = get_last_predictor()
             period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
