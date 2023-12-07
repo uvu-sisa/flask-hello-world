@@ -191,10 +191,12 @@ def index():
         pnls = pd.read_csv('pnl.csv')
     else:
         pnls = pd.DataFrame()
-    
-    # Create a Plotly Express plot
-    fig = px.line(pnls, x="number", y="pnl", title='Cum PNL')
+    if not pnls.empty
+        # Create a Plotly Express plot
+        fig = px.line(pnls, x="number", y="pnl", title='Cum PNL')
 
-    # Convert the plot to HTML
-    plot_html = pio.to_html(fig, full_html=False)
+        # Convert the plot to HTML
+        plot_html = pio.to_html(fig, full_html=False)
+    else:
+        plot_html = None
     return render_template('index.html',prediction_list=prediction_list, existing_numbers=existing_numbers,plot_html=plot_html)
