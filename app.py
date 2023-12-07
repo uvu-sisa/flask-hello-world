@@ -177,7 +177,7 @@ def index():
             pred = gen_predictor(actual_df)
             write_data(pred,'predictor')
             predT= pred.T
-            prediction_list = predT.index.values
+            prediction_list = predT.loc[predT[0]==1].index.values
             write_pnl(period_pnl)    
             
     # Read the existing numbers from the CSV file
