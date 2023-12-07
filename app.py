@@ -49,6 +49,7 @@ def get_lmh_idx(x):
         return 1
     if x in HLM_H:
         return 2
+    return 0
 def get_lmh(x):
     if x in HLM_L:
         return '1st'
@@ -77,7 +78,7 @@ def get_rb(x):
         return '00' 
 def create_data(x):
     data = np.zeros(len(TICKER))
-    
+    print(f'x {x}')
     if str(x) == '0':
         data[-2] = 1
         return pd.DataFrame(data,index=TICKER).T
