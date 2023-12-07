@@ -185,7 +185,7 @@ def index():
     existing_numbers = []
     with open(csv_file_path, 'r') as csvfile:
         csv_reader = csv.reader(csvfile)
-        for row in csv_reader[::-1]:
+        for row in csv_reader:
             existing_numbers.append(row[0])
     
     # Sample data
@@ -210,4 +210,5 @@ def index():
     else:
         prob_plot = None
 
-    return render_template('index.html',prob_plot=prob_plot,prediction_list=prediction_list, existing_numbers=existing_numbers,plot_html=plot_html)
+    return render_template('index.html',prob_plot=prob_plot,prediction_list=prediction_list, 
+                           existing_numbers=existing_numbers[::-1],plot_html=plot_html)
