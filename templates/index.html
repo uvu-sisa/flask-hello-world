@@ -21,6 +21,8 @@
         $(document).ready(function () {
             // Initial value
             let number = 1;
+            console.log('aaaaa')
+            console.log(number)
 
             // Update the span with the initial value
             $('#number').value = number;
@@ -39,11 +41,7 @@
     </script>
     
     <h2>Prediction</h2>
-    <ul>
-        {% for num in prediction_list %}
-            <li>{{ num }}</li>
-        {% endfor %}
-    </ul>
+    {{ prediction_list }}
     <h2>Plot</h2>
     {{ plot_html|safe }}
     {{ prob_plot|safe}}
