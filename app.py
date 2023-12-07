@@ -155,7 +155,7 @@ csv_file_path = 'numbers.csv'
 @app.route('/', methods=['GET', 'POST'])
 def index():
     prediction_list=[]
-    compare=None
+    compare=pd.DataFrame()
     if request.method == 'POST':
         
         if 'clear' in request.form:
