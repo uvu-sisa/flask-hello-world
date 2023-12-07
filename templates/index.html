@@ -47,11 +47,7 @@
     <h2>Plot</h2>
     {{ plot_html|safe }}
     {{ prob_plot|safe}}
-    <h2>LastPrediction</h2>
-        {% for table in tables %}
-        {{titles[loop.index]}}
-        {{ table|safe }}
-        {% endfor %}
+    
     <h2>Existing Numbers:</h2>
     <ul>
         {% for num in existing_numbers %}
