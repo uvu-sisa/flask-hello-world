@@ -169,7 +169,7 @@ def index():
             with open(csv_file_path, 'a', newline='') as csvfile:
                 csv_writer = csv.writer(csvfile)
                 csv_writer.writerow([number])
-            pred = np.zeros(NUM_INS)
+            pred = pd.DataFrame(np.zeros(NUM_INS),columns=TICKER)
             if number==37:number='0'
             if number==38:number='00'
             new_df = create_data(number)
