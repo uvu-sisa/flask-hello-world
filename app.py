@@ -169,7 +169,11 @@ def index():
         else:
             # Get the number from the form and append it to the CSV file
             number = request.form['number']
-            numbet = request.form['numbet']
+            numbet = 4
+            try:
+                numbet = int(request.form['numbet'])
+            except:
+                pass
             print(f'numbet {numbet}')
             with open(csv_file_path, 'a', newline='') as csvfile:
                 csv_writer = csv.writer(csvfile)
