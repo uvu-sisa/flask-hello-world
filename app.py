@@ -194,8 +194,7 @@ def index():
         pnls = pd.DataFrame()
     if not pnls.empty:
         # Create a Plotly Express plot
-        fig = px.line(pnls, x="number", y="pnl", title='Cum PNL')
-
+        fig = px.line(pd.read_csv('pnl.csv').cumsum(), title='Cum PNL')
         # Convert the plot to HTML
         plot_html = pio.to_html(fig, full_html=False)
     else:
