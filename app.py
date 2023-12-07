@@ -217,5 +217,5 @@ def index():
     else:
         prob_plot = None
 
-    return render_template('index.html',compare=compare,prob_plot=prob_plot,prediction_list=prediction_list, 
+    return render_template('index.html',tables=[compare.to_html(classes='data')],prob_plot=prob_plot,prediction_list=prediction_list, 
                            existing_numbers=existing_numbers[::-1],plot_html=plot_html)
