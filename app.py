@@ -137,7 +137,7 @@ def gen_predictor(actual_df,rolling_periods=36,num_bets=3):
     sum_prob[f'Last{rolling_periods}daysProb'] = lst_prob
     sum_prob = sum_prob*100
     sum_prob[['TotalProb',f'Last{rolling_periods}daysProb']] = sum_prob[['TotalProb',f'Last{rolling_periods}daysProb']].astype(int)
-    sum_prob.to_csv('prob.csv',index=False)
+    sum_prob.reset_index().to_csv('prob.csv',index=False)
     pred = (prob-lst_prob)*RETURNS
     order_prob = np.argsort(pred.values)
     for i in range(num_bets+1):
