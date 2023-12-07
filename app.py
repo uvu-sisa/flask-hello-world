@@ -84,6 +84,7 @@ def create_data(x):
     if str(x) == '00':
         data[-1] = 1
         return pd.DataFrame(data,index=TICKER).T
+    x = int(x)
     data[x-1] = 1 # number
     data[36+x%2] = 1 #event odd
     data[36+2+int(x in (rednums))] = 1 #black n red
