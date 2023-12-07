@@ -201,7 +201,8 @@ def index():
         plot_html = None
     if os.path.exists('prob.csv'):
         df = pd.read_csv('prob.csv')
-
+        if 'index' not in df.columns:
+            df = df.reset_index()
         fig = px.bar(df,x='index' ,y=['TotalProb', 'Last36daysProb'])
         fig.show()
         prob_plot = pio.to_html(fig, full_html=False)
