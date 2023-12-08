@@ -207,7 +207,10 @@ def index():
                 else:
                     preds_df = pd.DataFrame()
                 if not preds_df.empty:
-                    np.multiply(preds_df,actual_df)*RETURNS
+                    fig = px.line(pd.DataFrame(np.cumsum(np.multiply(actual_df[-len(preds_df):].values,preds_df.values)*RETURNS,axis=0),columns=TICKER))
+                    plot_strats_html = pio.to_html(fig, full_html=False)
+                else:
+                    plot_strats_html = None
                 write_data(pred,'predictor')
                 predT= pred.T
                 prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
@@ -242,5 +245,5 @@ def index():
     else:
         prob_plot = None
 
-    return render_template('index.html',prob_plot=prob_plot,prediction_list=prediction_list, 
+    return render_template('index.html',plot_strats_html=plot_strats_html,prob_plot=prob_plot,prediction_list=prediction_list, 
                            existing_numbers=existing_numbers[::-1],plot_html=plot_html)
