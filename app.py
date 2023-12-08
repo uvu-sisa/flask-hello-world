@@ -168,45 +168,45 @@ def index():
         
         if 'clear' in request.form:
             # Clear the CSV file
+            number = request.form['number']
             try:
                 os.remove('*.csv')
                 open(csv_file_path, 'w').close()
             except:
                 pass
             
+        # Get the number from the form and append it to the CSV file
+        number = request.form['number']
+        numbet = 4
+        try:
+            numbet = int(request.form['numbet'])
+        except:
+            pass
+        print(f'numbet {numbet}')
+        if ',' in number:
+            numbers = number.split(',')
         else:
-            # Get the number from the form and append it to the CSV file
-            number = request.form['number']
-            numbet = 4
-            try:
-                numbet = int(request.form['numbet'])
-            except:
-                pass
-            print(f'numbet {numbet}')
-            if ',' in number:
-                numbers = number.split(',')
-            else:
-                numbers = [number]
-            for number in numbers:
-                with open(csv_file_path, 'a', newline='') as csvfile:
-                    csv_writer = csv.writer(csvfile)
-                    csv_writer.writerow([number])
-                pred = pd.DataFrame(np.zeros(NUM_INS),index=TICKER).T
-                if number==37:number='0'
-                if number==38:number='00'
-                new_df = create_data(number)
-                compare = pd.concat([pred,new_df],ignore_index=True).T
-                compare.columns=['LastPrediction',f'Actual{number}']
-                compare = compare.loc[compare.LastPrediction==1].to_html(classes='data', header="true")
-                actual_df = write_data(new_df,'actual')
-                last_pred = get_last_predictor()
-                period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
-                pred = gen_predictor(actual_df,num_bets=numbet)
-                
-                write_data(pred,'predictor')
-                predT= pred.T
-                prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
-                write_pnl(period_pnl)    
+            numbers = [number]
+        for number in numbers:
+            with open(csv_file_path, 'a', newline='') as csvfile:
+                csv_writer = csv.writer(csvfile)
+                csv_writer.writerow([number])
+            pred = pd.DataFrame(np.zeros(NUM_INS),index=TICKER).T
+            if number==37:number='0'
+            if number==38:number='00'
+            new_df = create_data(number)
+            compare = pd.concat([pred,new_df],ignore_index=True).T
+            compare.columns=['LastPrediction',f'Actual{number}']
+            compare = compare.loc[compare.LastPrediction==1].to_html(classes='data', header="true")
+            actual_df = write_data(new_df,'actual')
+            last_pred = get_last_predictor()
+            period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
+            pred = gen_predictor(actual_df,num_bets=numbet)
+            
+            write_data(pred,'predictor')
+            predT= pred.T
+            prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
+            write_pnl(period_pnl)    
     if os.path.exists('predictor.csv'):
         preds_df = get_predictor_df().iloc[:-1]
     else:
