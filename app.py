@@ -121,17 +121,25 @@ def write_pnl(period_pnl):
     pnls = pd.concat([pnls,pd.DataFrame([period_pnl],columns=['pnl'])])
     pnls.to_csv('pnl.csv',index=False)
     return pnls
-    
+
+def get_predictor_df():
+
+    preds = pd.read_csv('predictor.csv')
+    return preds
+
 def get_last_predictor():
     preds =  pd.DataFrame(np.zeros(NUM_INS)[None,:],columns=TICKER)
     if os.path.exists('predictor.csv'):
-        preds = pd.read_csv('predictor.csv').iloc[-1]
+        return get_predictor_df().iloc[-1]
     return preds
         
 
 def gen_predictor(actual_df,rolling_periods=36,num_bets=4):
     alpha = np.zeros(NUM_INS)
-    prob = actual_df.sum()/len(actual_df)
+    if len(actual_df)<100:
+        prob = actual_df.sum()/len(actual_df)
+    else:
+        prob = actual_df[-100].sum()/100
     lst_prob = actual_df.iloc[-rolling_periods:].sum()/rolling_periods
     sum_prob = pd.DataFrame(prob.copy(),columns=['TotalProb'])
     sum_prob[f'Last{rolling_periods}daysProb'] = lst_prob
@@ -175,24 +183,35 @@ def index():
             except:
                 pass
             print(f'numbet {numbet}')
-            with open(csv_file_path, 'a', newline='') as csvfile:
-                csv_writer = csv.writer(csvfile)
-                csv_writer.writerow([number])
-            pred = pd.DataFrame(np.zeros(NUM_INS),index=TICKER).T
-            if number==37:number='0'
-            if number==38:number='00'
-            new_df = create_data(number)
-            compare = pd.concat([pred,new_df],ignore_index=True).T
-            compare.columns=['LastPrediction',f'Actual{number}']
-            compare = compare.loc[compare.LastPrediction==1].to_html(classes='data', header="true")
-            actual_df = write_data(new_df,'actual')
-            last_pred = get_last_predictor()
-            period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
-            pred = gen_predictor(actual_df,num_bets=numbet)
-            write_data(pred,'predictor')
-            predT= pred.T
-            prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
-            write_pnl(period_pnl)    
+            if ',' in number:
+                numbers = number.split(',')
+            else:
+                numbers = [number]
+            for number in numbers:
+                with open(csv_file_path, 'a', newline='') as csvfile:
+                    csv_writer = csv.writer(csvfile)
+                    csv_writer.writerow([number])
+                pred = pd.DataFrame(np.zeros(NUM_INS),index=TICKER).T
+                if number==37:number='0'
+                if number==38:number='00'
+                new_df = create_data(number)
+                compare = pd.concat([pred,new_df],ignore_index=True).T
+                compare.columns=['LastPrediction',f'Actual{number}']
+                compare = compare.loc[compare.LastPrediction==1].to_html(classes='data', header="true")
+                actual_df = write_data(new_df,'actual')
+                last_pred = get_last_predictor()
+                period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
+                pred = gen_predictor(actual_df,num_bets=numbet)
+                if os.path.exists('predictor.csv'):
+                    preds_df = get_predictor_df()
+                else:
+                    preds_df = pd.DataFrame()
+                if not preds_df.empty:
+                    np.multiply(preds_df,actual_df)*RETURNS
+                write_data(pred,'predictor')
+                predT= pred.T
+                prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
+                write_pnl(period_pnl)    
             
     # Read the existing numbers from the CSV file
     existing_numbers = []
