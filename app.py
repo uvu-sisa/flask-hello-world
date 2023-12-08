@@ -202,20 +202,20 @@ def index():
                 last_pred = get_last_predictor()
                 period_pnl = cal_period_pnl(last_pred,new_df.values.reshape(-1))
                 pred = gen_predictor(actual_df,num_bets=numbet)
-                if os.path.exists('predictor.csv'):
-                    preds_df = get_predictor_df()
-                else:
-                    preds_df = pd.DataFrame()
-                if not preds_df.empty:
-                    fig = px.line(pd.DataFrame(np.cumsum(np.multiply(actual_df[-len(preds_df):].values,preds_df.values)*RETURNS,axis=0),columns=TICKER))
-                    plot_strats_html = pio.to_html(fig, full_html=False)
-                else:
-                    plot_strats_html = None
+                
                 write_data(pred,'predictor')
                 predT= pred.T
                 prediction_list = ','.join([str(v) for v in list(predT.loc[predT[0]==1].index.values)])
                 write_pnl(period_pnl)    
-            
+    if os.path.exists('predictor.csv'):
+        preds_df = get_predictor_df().iloc[:-1]
+    else:
+        preds_df = pd.DataFrame()
+    if not preds_df.empty:
+        fig = px.line(pd.DataFrame(np.cumsum(np.multiply(actual_df[-len(preds_df):].values,preds_df.values)*RETURNS,axis=0),columns=TICKER))
+        plot_strats_html = pio.to_html(fig, full_html=False)
+    else:
+        plot_strats_html = None        
     # Read the existing numbers from the CSV file
     existing_numbers = []
     with open(csv_file_path, 'r') as csvfile:
